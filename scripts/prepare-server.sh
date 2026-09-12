@@ -41,7 +41,8 @@ echo "[5/5] 生成预置数据库并复制到 Android assets"
 # 项目不提交二进制 dev.db;需要时用 db push + seed 从零生成(可复现、干净)。
 if [ ! -f "$ROOT/dev.db" ]; then
   echo ">> 生成种子数据库(prisma db push + db:seed)"
-  DATABASE_URL="$DATABASE_URL" npx prisma db push --skip-generate
+  # Prisma 7 的 db push 无 --skip-generate 参数
+  DATABASE_URL="$DATABASE_URL" npx prisma db push
   DATABASE_URL="$DATABASE_URL" npm run db:seed
 fi
 cp "$ROOT/dev.db" "$ASSETS/dev.db"
