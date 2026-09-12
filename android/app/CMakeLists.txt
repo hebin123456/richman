@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.22.1)
 project("richman_nodeproj" CXX)
 
+# nodejs-mobile v24 的 V8/node 头文件要求 C++20
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 include_directories(libnode/include/node/)
 
 # 导入 nodejs-mobile 预编译的动态库(由 scripts/fetch-libnode.sh 下载)
