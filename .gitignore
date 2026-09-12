@@ -28,4 +28,5 @@ dist/
 .env
 *.db
 *.db-journal
-.DS_Store*.tsbuildinfo
+.DS_Store
+*.tsbuildinfo

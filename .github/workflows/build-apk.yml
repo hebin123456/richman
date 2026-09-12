@@ -101,6 +101,11 @@ jobs:
           NAPI_NODE_VERSION="$NAPI_NODE_VERSION" ABI="$ABI" \
             bash scripts/cross-compile-better-sqlite3.sh
 
+      # ---- 生成 Capacitor 插件工程(capacitor-cordova-android-plugins) ----
+      # 该目录由 cap sync 生成、不入库,全新 checkout 必须先同步再构 Gradle。
+      - name: Capacitor sync
+        run: npx cap sync android
+
       - name: Build APK
         run: |
           cd android
