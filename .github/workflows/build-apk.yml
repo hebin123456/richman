@@ -61,8 +61,9 @@ jobs:
         # setup-android 会安装 platform-tools;下面再补 platform/build-tools/NDK
       - name: Install platform, build-tools, NDK
         run: |
-          yes | sdkmanager --licenses >/dev/null 2>&1 || true
-          sdkmanager "platforms;android-36" "build-tools;36.0.0" "ndk;26.1.10909125" system-images;android-36;default;x86_64 >/dev/null 2>&1 || true
+          sdkmanager --licenses </dev/null >/dev/null 2>&1 || true
+          # 注意:包名含分号,必须整体加引号,避免被 shell 当作命令分隔符
+          sdkmanager "platforms;android-36" "build-tools;36.0.0" "ndk;26.1.10909125"
           echo "ANDROID_HOME=$ANDROID_HOME"
           ls "$ANDROID_HOME/ndk" || true
 
@@ -89,9 +90,10 @@ jobs:
             https://github.com/nodejs-mobile/nodejs-mobile/releases/download/v18.20.4/nodejs-mobile-v18.20.4-android.zip
 
       # ---- 交叉编译 better-sqlite3 到 Arm64,供安卓端加载 ----
+      # 提示:前置准备(含 prepare-server)成功后才会执行;
+      # 该步骤失败不阻断打包,但产物中的 sqlite 则需按 README 手动交叉编译。
       - name: Cross-compile better-sqlite3 (arm64)
-        if: always()
-        continue-on-error: true   # 该项失败不阻断打包,但会在产物说明中标明需要人工校验
+        continue-on-error: true
         run: |
           sudo apt-get update -qq && sudo apt-get install -y -qq cmake ninja-build
           npm i -g bare-make@latest
