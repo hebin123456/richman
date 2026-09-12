@@ -1,0 +1,31 @@
+<svg width="360" height="520" viewBox="0 0 360 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="dress" x1="110" y1="280" x2="250" y2="500" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#6EE7B7"/>
+      <stop offset="1" stop-color="#059669"/>
+    </linearGradient>
+    <linearGradient id="hair" x1="124" y1="110" x2="236" y2="240" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#7C2D12"/>
+      <stop offset="1" stop-color="#14532D"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="182" cy="486" rx="98" ry="18" fill="#1E293B" fill-opacity="0.16"/>
+  <path d="M112 438C128 386 152 352 182 352C212 352 236 386 252 438L266 500H98L112 438Z" fill="url(#dress)"/>
+  <path d="M132 286C142 262 160 248 182 248C204 248 222 262 232 286L246 500H118L132 286Z" fill="#D1FAE5"/>
+  <ellipse cx="182" cy="214" rx="78" ry="92" fill="#F6D0B0"/>
+  <path d="M108 198C112 146 140 112 182 112C224 112 252 146 256 198H108Z" fill="url(#hair)"/>
+  <path d="M132 128C146 112 162 104 182 104C202 104 218 112 232 128V208H132V128Z" fill="url(#hair)"/>
+  <circle cx="126" cy="148" r="18" fill="#10B981"/>
+  <circle cx="238" cy="148" r="18" fill="#FACC15"/>
+  <circle cx="152" cy="212" r="8" fill="#1F2937"/>
+  <circle cx="210" cy="212" r="8" fill="#1F2937"/>
+  <path d="M158 258C168 270 194 270 204 258" stroke="#92400E" stroke-width="8" stroke-linecap="round"/>
+  <path d="M112 314C108 288 124 272 148 272C170 272 184 288 182 314L178 366L116 360L112 314Z" fill="#86EFAC"/>
+  <path d="M252 314C256 288 240 272 216 272C194 272 180 288 182 314L186 366L248 360L252 314Z" fill="#86EFAC"/>
+  <path d="M136 382C148 394 164 400 182 400C200 400 216 394 228 382" stroke="#FDE68A" stroke-width="12" stroke-linecap="round"/>
+  <rect x="222" y="308" width="18" height="96" rx="9" transform="rotate(12 222 308)" fill="#A16207"/>
+  <circle cx="238" cy="316" r="10" fill="#FACC15"/>
+  <circle cx="224" cy="322" r="8" fill="#10B981"/>
+  <circle cx="246" cy="330" r="7" fill="#38BDF8"/>
+  <path d="M222 348L248 354" stroke="#FDE68A" stroke-width="6" stroke-linecap="round"/>
+</svg>

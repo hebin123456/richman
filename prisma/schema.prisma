@@ -1,0 +1,213 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+enum RoomStatus {
+  LOBBY
+  IN_GAME
+  FINISHED
+}
+
+enum GamePhase {
+  WAITING_FOR_ROLL
+  WAITING_FOR_JAIL_CHOICE
+  WAITING_FOR_ABDUCTION_RETURN
+  WAITING_FOR_ITEM_REACTION
+  WAITING_FOR_PROPERTY_DECISION
+  WAITING_FOR_SHOP_DECISION
+  WAITING_FOR_LOTTERY_DECISION
+  WAITING_FOR_BANK_DECISION
+  WAITING_FOR_MAGIC_DECISION
+  WAITING_FOR_AMUSEMENT_DECISION
+  WAITING_FOR_RECOVERY
+  WAITING_FOR_TURN_END
+  GAME_OVER
+}
+
+model Room {
+  id        String       @id @default(cuid())
+  code      String       @unique
+  status    RoomStatus   @default(LOBBY)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  settings  RoomSettings?
+  players   Player[]
+  game      Game?
+}
+
+model RoomSettings {
+  id                    String  @id @default(cuid())
+  roomId                String  @unique
+  startingCash          Int     @default(2000)
+  passStartSalary       Int     @default(200)
+  maxPlayers            Int     @default(4)
+  jailFine              Int     @default(100)
+  parkingJackpotEnabled Boolean @default(true)
+  stocksEnabled         Boolean @default(false)
+  parkingJackpot        Int     @default(0)
+  turnSeconds           Int     @default(120)
+  room                  Room    @relation(fields: [roomId], references: [id], onDelete: Cascade)
+}
+
+model Player {
+  id          String       @id @default(cuid())
+  roomId       String
+  name         String
+  token        String       @unique
+  seatOrder    Int
+  isHost       Boolean      @default(false)
+  isReady      Boolean      @default(false)
+  isBot        Boolean      @default(false)
+  isConnected  Boolean      @default(true)
+  lastSeenAt   DateTime?
+  characterId  String
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  room         Room         @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  state        PlayerState?
+  events       GameEvent[]  @relation("ActorEvents")
+  stockHoldings PlayerStockHolding[]
+  inventoryItems PlayerInventoryItem[]
+
+  @@unique([roomId, characterId])
+  @@unique([roomId, seatOrder])
+}
+
+model Game {
+  id                  String         @id @default(cuid())
+  roomId              String         @unique
+  phase               GamePhase      @default(WAITING_FOR_ROLL)
+  version             Int            @default(1)
+  turnNumber          Int            @default(1)
+  currentPlayerId     String
+  winnerPlayerId      String?
+  lastDiceA           Int?
+  lastDiceB           Int?
+  lastDiceTotal       Int?
+  lastRollValues      String         @default("[]")
+  consecutiveDoubles  Int            @default(0)
+  pendingTileIndex    Int?
+  rollAgainAvailable  Boolean        @default(false)
+  recoveryContext     String?
+  reactionContext     String?
+  chanceDeck          String
+  chanceIndex         Int            @default(0)
+  communityDeck       String
+  communityIndex      Int            @default(0)
+  calendarStartDate   String?
+  lotteryJackpot      Int            @default(600)
+  lotteryDrawAtTurn   Int            @default(4)
+  lotteryTickets      String         @default("[]")
+  mapGodSpawns        String         @default("[]")
+  logSummary          String?
+  createdAt           DateTime       @default(now())
+  updatedAt           DateTime       @updatedAt
+  room                Room           @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  playerStates        PlayerState[]
+  propertyStates      PropertyState[]
+  stockStates         StockState[]
+  stockHoldings       PlayerStockHolding[]
+  inventoryItems      PlayerInventoryItem[]
+  events              GameEvent[]
+}
+
+model PlayerState {
+  id             String   @id @default(cuid())
+  gameId         String
+  playerId       String   @unique
+  cash           Int
+  position       Int      @default(0)
+  lapsCompleted  Int      @default(0)
+  inJailTurns    Int      @default(0)
+  abductedTurns  Int      @default(0)
+  sleepwalkingTurns Int   @default(0)
+  jailFreeCards  Int      @default(0)
+  bankSavings    Int      @default(0)
+  bankDebt       Int      @default(0)
+  activeGodKey   String?
+  godTurns       Int      @default(0)
+  activeVehicleKey String?
+  vehicleTurns   Int      @default(0)
+  isManaged      Boolean  @default(false)
+  managedReason  String?
+  isBankrupt     Boolean  @default(false)
+  bankruptAtTurn Int?
+  game           Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  player         Player   @relation(fields: [playerId], references: [id], onDelete: Cascade)
+
+  @@unique([gameId, playerId])
+}
+
+model PropertyState {
+  id            String  @id @default(cuid())
+  gameId        String
+  tileIndex     Int
+  ownerPlayerId String?
+  houseCount    Int     @default(0)
+  hasHotel      Boolean @default(false)
+  mortgaged     Boolean @default(false)
+  game          Game    @relation(fields: [gameId], references: [id], onDelete: Cascade)
+
+  @@unique([gameId, tileIndex])
+}
+
+model StockState {
+  id              String   @id @default(cuid())
+  gameId          String
+  symbol          String
+  name            String
+  currentPrice    Int
+  previousPrice   Int
+  availableShares Int      @default(0)
+  volatility      Int      @default(10)
+  game            Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  holdings        PlayerStockHolding[]
+
+  @@unique([gameId, symbol])
+}
+
+model PlayerStockHolding {
+  id           String    @id @default(cuid())
+  gameId       String
+  stockStateId String
+  playerId     String
+  shares       Int       @default(0)
+  averageCost  Int       @default(0)
+  game         Game      @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  stockState   StockState @relation(fields: [stockStateId], references: [id], onDelete: Cascade)
+  player       Player    @relation(fields: [playerId], references: [id], onDelete: Cascade)
+
+  @@unique([stockStateId, playerId])
+}
+
+model PlayerInventoryItem {
+  id       String @id @default(cuid())
+  gameId   String
+  playerId String
+  itemKey  String
+  quantity Int    @default(0)
+  game     Game   @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  player   Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
+
+  @@unique([gameId, playerId, itemKey])
+}
+
+model GameEvent {
+  id            String   @id @default(cuid())
+  gameId        String?
+  roomId        String
+  actorPlayerId String?
+  sequence      Int
+  eventType     String
+  summary       String
+  payload       String
+  createdAt     DateTime @default(now())
+  game          Game?    @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  actor         Player?  @relation("ActorEvents", fields: [actorPlayerId], references: [id], onDelete: SetNull)
+
+  @@unique([roomId, sequence])
+}

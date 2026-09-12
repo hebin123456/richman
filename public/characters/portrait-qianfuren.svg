@@ -1,0 +1,32 @@
+<svg width="360" height="520" viewBox="0 0 360 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="dress" x1="104" y1="256" x2="262" y2="500" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#A78BFA"/>
+      <stop offset="1" stop-color="#6D28D9"/>
+    </linearGradient>
+    <linearGradient id="hat" x1="118" y1="74" x2="252" y2="156" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F5D0FE"/>
+      <stop offset="1" stop-color="#A855F7"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="182" cy="486" rx="98" ry="18" fill="#1E293B" fill-opacity="0.16"/>
+  <path d="M110 438C126 384 150 350 182 350C214 350 238 384 254 438L268 500H96L110 438Z" fill="url(#dress)"/>
+  <path d="M134 286C142 262 158 248 182 248C206 248 222 262 230 286L244 500H120L134 286Z" fill="#7C3AED"/>
+  <ellipse cx="182" cy="214" rx="76" ry="92" fill="#F7D3BC"/>
+  <path d="M112 200C114 146 140 112 182 112C224 112 250 146 252 200H112Z" fill="#4C1D95"/>
+  <path d="M108 142C122 96 148 74 182 74C216 74 242 96 256 142L226 170H138L108 142Z" fill="url(#hat)"/>
+  <path d="M112 144C132 160 232 160 252 144" stroke="#581C87" stroke-width="8" stroke-linecap="round"/>
+  <path d="M228 104C246 112 258 126 262 144C246 142 232 132 220 118L228 104Z" fill="#FDE68A"/>
+  <circle cx="154" cy="214" r="8" fill="#1F2937"/>
+  <circle cx="210" cy="214" r="8" fill="#1F2937"/>
+  <path d="M160 258C170 268 194 268 204 258" stroke="#A21CAF" stroke-width="8" stroke-linecap="round"/>
+  <path d="M112 320C118 292 140 272 166 278C190 284 202 308 196 334L184 380L124 364L112 320Z" fill="#8B5CF6"/>
+  <path d="M252 320C246 292 224 272 198 278C174 284 162 308 168 334L180 380L240 364L252 320Z" fill="#8B5CF6"/>
+  <path d="M140 380C154 394 168 402 182 402C196 402 210 394 224 380" stroke="#E9D5FF" stroke-width="12" stroke-linecap="round"/>
+  <path d="M118 348L172 336L184 390L130 402L118 348Z" fill="#FEF3C7" stroke="#EAB308" stroke-width="6"/>
+  <path d="M140 356H162" stroke="#A16207" stroke-width="6" stroke-linecap="round"/>
+  <path d="M140 374H158" stroke="#A16207" stroke-width="6" stroke-linecap="round"/>
+  <circle cx="246" cy="350" r="22" fill="#FDE68A"/>
+  <path d="M238 350H254" stroke="#7C2D12" stroke-width="6" stroke-linecap="round"/>
+  <path d="M246 342V358" stroke="#7C2D12" stroke-width="6" stroke-linecap="round"/>
+</svg>

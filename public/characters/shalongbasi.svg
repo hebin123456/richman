@@ -1,0 +1,32 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="24" y1="18" x2="176" y2="186" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#A3E635"/>
+      <stop offset="1" stop-color="#15803D"/>
+    </linearGradient>
+    <linearGradient id="band" x1="64" y1="70" x2="136" y2="86" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0F172A"/>
+      <stop offset="1" stop-color="#334155"/>
+    </linearGradient>
+  </defs>
+  <circle cx="100" cy="100" r="94" fill="url(#bg)"/>
+  <circle cx="100" cy="100" r="88" fill="#F7FEE7" fill-opacity="0.16"/>
+  <ellipse cx="100" cy="172" rx="48" ry="25" fill="#14532D" fill-opacity="0.88"/>
+  <path d="M60 144C71 132 84 126 100 126C116 126 129 132 140 144V160H60V144Z" fill="#0F766E"/>
+  <ellipse cx="100" cy="101" rx="38" ry="43" fill="#F7C9A5"/>
+  <path d="M64 86C67 65 81 51 100 51C119 51 133 65 136 86H64Z" fill="#1F2937"/>
+  <path d="M66 61L83 50L85 69L66 61Z" fill="#1F2937"/>
+  <path d="M82 49L100 40L103 62L82 49Z" fill="#1F2937"/>
+  <path d="M100 40L121 49L116 65L100 40Z" fill="#1F2937"/>
+  <path d="M120 49L137 62L117 70L120 49Z" fill="#1F2937"/>
+  <rect x="60" y="71" width="80" height="15" rx="7.5" fill="url(#band)"/>
+  <circle cx="84" cy="78.5" r="11" fill="#DCFCE7" fill-opacity="0.25" stroke="#E2E8F0" stroke-width="3"/>
+  <circle cx="116" cy="78.5" r="11" fill="#DCFCE7" fill-opacity="0.25" stroke="#E2E8F0" stroke-width="3"/>
+  <rect x="94" y="76" width="12" height="5" rx="2.5" fill="#E2E8F0"/>
+  <circle cx="86" cy="95" r="4.2" fill="#0F172A"/>
+  <circle cx="114" cy="95" r="4.2" fill="#0F172A"/>
+  <path d="M84 116C91 123 109 123 116 116" stroke="#166534" stroke-width="5" stroke-linecap="round"/>
+  <path d="M72 142C80 149 91 153 100 153C109 153 120 149 128 142" stroke="#FDE047" stroke-width="6" stroke-linecap="round"/>
+  <circle cx="73" cy="105" r="5" fill="#FDE047" fill-opacity="0.22"/>
+  <circle cx="127" cy="105" r="5" fill="#FDE047" fill-opacity="0.22"/>
+</svg>

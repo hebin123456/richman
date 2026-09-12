@@ -1,0 +1,1310 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f8f3e6;
+  --foreground: #0f172a;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+  background:
+    radial-gradient(circle at top left, rgba(37, 99, 235, 0.15), transparent 24%),
+    radial-gradient(circle at top right, rgba(168, 85, 247, 0.14), transparent 26%),
+    radial-gradient(circle at bottom center, rgba(245, 158, 11, 0.14), transparent 32%),
+    linear-gradient(180deg, #07111d 0%, #0d1728 100%);
+}
+
+body {
+  min-height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: transparent;
+  color: #f8fafc;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+a {
+  color: inherit;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: 0;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+::selection {
+  background: rgba(245, 158, 11, 0.28);
+}
+
+.game-shell {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.game-canvas-host {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.game-canvas-host canvas {
+  display: block;
+}
+
+.phaser-dom-root {
+  pointer-events: none;
+}
+
+.phaser-ui-screen,
+.phaser-hud-topbar,
+.phaser-hud-sidebar,
+.phaser-hud-modal-shell,
+.phaser-hud-modal-backdrop,
+.phaser-hud-modal-card {
+  pointer-events: auto;
+}
+
+.phaser-ui-screen {
+  width: min(960px, max(420px, calc(100vw - 560px)));
+  display: grid;
+  gap: 18px;
+}
+
+.phaser-home-root .phaser-ui-screen,
+.phaser-lobby-root .phaser-ui-screen {
+  max-height: calc(100vh - 96px);
+  overflow: auto;
+  padding-right: 6px;
+}
+
+.phaser-home-root .phaser-ui-screen {
+  width: 100%;
+}
+
+.phaser-lobby-root .phaser-ui-screen {
+  width: 100%;
+}
+
+.phaser-eyebrow {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: rgba(226, 232, 240, 0.72);
+}
+
+.phaser-screen-title {
+  font-size: 36px;
+  font-weight: 800;
+  line-height: 1.1;
+  color: #f8fafc;
+}
+
+.phaser-screen-copy {
+  font-size: 15px;
+  line-height: 1.7;
+  color: rgba(226, 232, 240, 0.82);
+}
+
+.phaser-home-highlights {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.phaser-home-highlights .phaser-pill {
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.phaser-home-grid,
+.phaser-lobby-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.phaser-home-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.phaser-home-root .phaser-home-grid {
+  align-items: start;
+}
+
+.phaser-home-root .phaser-ui-screen {
+  gap: 14px;
+}
+
+.phaser-home-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.phaser-home-help-button {
+  width: 38px;
+  min-width: 38px;
+  min-height: 38px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.phaser-home-help-button.is-open {
+  background: rgba(34, 197, 94, 0.22);
+  border-color: rgba(34, 197, 94, 0.72);
+}
+
+.phaser-home-root .phaser-panel {
+  padding: 14px;
+  gap: 10px;
+}
+
+.phaser-home-rules-panel {
+  gap: 12px;
+}
+
+.phaser-home-rules-modal-card {
+  width: min(820px, calc(100vw - 28px));
+  max-height: min(78vh, 760px);
+}
+
+.phaser-home-rules-modal-body {
+  padding-right: 2px;
+}
+
+.phaser-home-rules-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.phaser-home-rule-card {
+  display: grid;
+  gap: 6px;
+  padding: 12px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(148, 163, 184, 0.16);
+}
+
+.phaser-home-room-list-panel {
+  gap: 12px;
+}
+
+.phaser-home-root .phaser-field input {
+  padding: 10px 12px;
+}
+
+.phaser-home-form-panel {
+  align-content: start;
+}
+
+.phaser-home-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.phaser-field--span-2 {
+  grid-column: span 2;
+}
+
+.phaser-home-form-meta {
+  min-height: 18px;
+}
+
+.phaser-advanced-stack {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 18px;
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.phaser-lobby-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.phaser-lobby-root .phaser-panel {
+  padding: 14px;
+  gap: 10px;
+}
+
+.phaser-lobby-compact-panel {
+  align-content: start;
+}
+
+.phaser-lobby-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.phaser-lobby-form-meta {
+  min-height: 18px;
+}
+
+.phaser-panel {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(15, 23, 42, 0.58);
+  backdrop-filter: blur(14px);
+  border-radius: 24px;
+  padding: 18px;
+  display: grid;
+  gap: 14px;
+  box-shadow: 0 16px 50px rgba(2, 6, 23, 0.28);
+}
+
+.phaser-panel-title {
+  font-size: 21px;
+  font-weight: 800;
+  color: #f8fafc;
+}
+
+.phaser-field {
+  display: grid;
+  gap: 8px;
+}
+
+.phaser-field span,
+.phaser-checkbox span {
+  font-size: 13px;
+  font-weight: 700;
+  color: rgba(226, 232, 240, 0.82);
+}
+
+.phaser-field input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  background: rgba(15, 23, 42, 0.82);
+  color: #f8fafc;
+  outline: none;
+}
+
+.phaser-field select,
+.phaser-select {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 16px;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  background: rgba(15, 23, 42, 0.82);
+  color: #f8fafc;
+  outline: none;
+}
+
+.phaser-field input:focus {
+  border-color: rgba(96, 165, 250, 0.88);
+}
+
+.phaser-field select:focus,
+.phaser-select:focus {
+  border-color: rgba(96, 165, 250, 0.88);
+}
+
+.phaser-settings-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.phaser-character-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.phaser-character-card {
+  display: grid;
+  gap: 4px;
+  padding: 12px;
+  border-radius: 18px;
+  border: 1px solid rgba(148, 163, 184, 0.32);
+  background: rgba(255, 255, 255, 0.06);
+  color: #e2e8f0;
+  text-align: left;
+  transition: transform 140ms ease, border-color 140ms ease, background 140ms ease;
+}
+
+.phaser-character-card:hover {
+  transform: translateY(-1px);
+  border-color: rgba(96, 165, 250, 0.9);
+}
+
+.phaser-character-card.is-selected {
+  border-color: rgba(245, 158, 11, 0.95);
+  background: rgba(245, 158, 11, 0.18);
+}
+
+.phaser-character-card.is-locked {
+  opacity: 0.48;
+}
+
+.phaser-character-name {
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.phaser-character-meta {
+  font-size: 12px;
+  color: rgba(226, 232, 240, 0.72);
+}
+
+.phaser-primary-button,
+.phaser-secondary-button,
+.phaser-danger-button,
+.phaser-ghost-button,
+.phaser-chip-button {
+  border-radius: 999px;
+  padding: 11px 16px;
+  font-size: 13px;
+  font-weight: 800;
+  transition: transform 140ms ease, opacity 140ms ease, background 140ms ease;
+}
+
+.phaser-primary-button {
+  background: linear-gradient(135deg, #f59e0b, #f97316);
+  color: #08111d;
+}
+
+.phaser-secondary-button {
+  background: rgba(248, 250, 252, 0.12);
+  color: #f8fafc;
+}
+
+.phaser-danger-button {
+  background: rgba(244, 63, 94, 0.92);
+  color: #fff;
+}
+
+.phaser-ghost-button,
+.phaser-chip-button {
+  background: rgba(15, 23, 42, 0.78);
+  color: #f8fafc;
+  border: 1px solid rgba(148, 163, 184, 0.28);
+}
+
+.phaser-chip-button.is-selected {
+  background: rgba(34, 197, 94, 0.22);
+  border-color: rgba(34, 197, 94, 0.84);
+}
+
+.phaser-primary-button:hover,
+.phaser-secondary-button:hover,
+.phaser-danger-button:hover,
+.phaser-ghost-button:hover,
+.phaser-chip-button:hover {
+  transform: translateY(-1px);
+}
+
+.phaser-primary-button:disabled,
+.phaser-secondary-button:disabled,
+.phaser-danger-button:disabled,
+.phaser-ghost-button:disabled,
+.phaser-chip-button:disabled {
+  opacity: 0.42;
+}
+
+.phaser-top-actions,
+.phaser-inline-actions,
+.phaser-button-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.phaser-top-actions {
+  justify-content: space-between;
+}
+
+.phaser-list,
+.phaser-meta-stack {
+  display: grid;
+  gap: 10px;
+}
+
+.phaser-danger-zone {
+  display: grid;
+  gap: 10px;
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px dashed rgba(244, 63, 94, 0.34);
+}
+
+.phaser-danger-zone-label {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: rgba(251, 113, 133, 0.9);
+}
+
+.phaser-danger-zone .phaser-danger-button {
+  width: 100%;
+}
+
+.phaser-player-compact {
+  display: grid;
+  gap: 10px;
+}
+
+.phaser-player-compact-header {
+  display: grid;
+  gap: 4px;
+}
+
+.phaser-player-compact-title {
+  font-size: 14px;
+  color: #f8fafc;
+}
+
+.phaser-player-compact-subtitle {
+  font-size: 12px;
+  color: rgba(226, 232, 240, 0.72);
+}
+
+.phaser-player-compact-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.phaser-player-compact-card {
+  min-width: 0;
+  padding: 9px 10px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  display: grid;
+  gap: 4px;
+}
+
+.phaser-player-compact-card-wide {
+  grid-column: 1 / -1;
+}
+
+.phaser-player-compact-label {
+  font-size: 11px;
+  font-weight: 800;
+  color: rgba(226, 232, 240, 0.64);
+}
+
+.phaser-player-compact-value {
+  font-size: 13px;
+  font-weight: 800;
+  color: #f8fafc;
+  line-height: 1.35;
+  word-break: break-word;
+}
+
+.phaser-player-compact-meta {
+  font-size: 11px;
+  color: rgba(226, 232, 240, 0.66);
+  line-height: 1.35;
+  word-break: break-word;
+}
+
+.phaser-list-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 12px 14px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(148, 163, 184, 0.14);
+}
+
+.phaser-list-item.is-selected {
+  border-color: rgba(245, 158, 11, 0.88);
+}
+
+.phaser-clickable-list-item {
+  cursor: pointer;
+  transition:
+    transform 140ms ease,
+    border-color 140ms ease,
+    background 140ms ease;
+}
+
+.phaser-clickable-list-item:hover {
+  border-color: rgba(245, 158, 11, 0.52);
+}
+
+.phaser-list-title {
+  font-size: 14px;
+  font-weight: 800;
+  color: #f8fafc;
+}
+
+.phaser-list-meta {
+  margin-top: 4px;
+  font-size: 12px;
+  color: rgba(226, 232, 240, 0.68);
+}
+
+.phaser-room-list-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.phaser-room-card {
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(148, 163, 184, 0.14);
+}
+
+.phaser-room-card-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.phaser-pill {
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  background: rgba(15, 23, 42, 0.7);
+  color: #f8fafc;
+}
+
+.phaser-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.phaser-checkbox input {
+  width: 16px;
+  height: 16px;
+}
+
+.phaser-error,
+.phaser-info-box {
+  padding: 12px 14px;
+  border-radius: 18px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.phaser-error {
+  background: rgba(127, 29, 29, 0.76);
+  border: 1px solid rgba(248, 113, 113, 0.38);
+  color: #fecaca;
+}
+
+.phaser-info-box {
+  background: rgba(120, 53, 15, 0.7);
+  border: 1px solid rgba(251, 191, 36, 0.36);
+  color: #fde68a;
+}
+
+.phaser-scroll-region {
+  max-height: 220px;
+  overflow: auto;
+  display: grid;
+  gap: 10px;
+}
+
+.phaser-hud-root {
+  width: 100vw;
+  height: 100vh;
+}
+
+.phaser-hud-shell {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+}
+
+.phaser-hud-topbar {
+  position: absolute;
+  top: 10px;
+  left: 14px;
+  width: min(432px, calc(100vw - 336px));
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(15, 23, 42, 0.48);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 18px 50px rgba(2, 6, 23, 0.28);
+}
+
+.phaser-hud-room {
+  min-width: 0;
+}
+
+.phaser-hud-topbar .phaser-eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+}
+
+.phaser-hud-title {
+  font-size: 17px;
+  font-weight: 800;
+  color: #f8fafc;
+  line-height: 1.15;
+}
+
+.phaser-hud-meta {
+  margin-top: 2px;
+  font-size: 11px;
+  line-height: 1.3;
+  color: rgba(226, 232, 240, 0.74);
+}
+
+.phaser-hud-topbar .phaser-ghost-button {
+  padding: 8px 11px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.phaser-hud-sidebar {
+  position: absolute;
+  top: 14px;
+  right: 18px;
+  width: min(304px, 21vw);
+  max-height: calc(100vh - 28px);
+  padding-right: 4px;
+  overflow: auto;
+  display: grid;
+  gap: 8px;
+}
+
+.phaser-hud-sidebar .phaser-panel {
+  padding: 12px;
+  gap: 8px;
+  border-radius: 20px;
+}
+
+.phaser-hud-sidebar .phaser-panel-title {
+  font-size: 16px;
+}
+
+.phaser-hud-sidebar .phaser-scroll-region {
+  max-height: 168px;
+  gap: 8px;
+}
+
+.phaser-hud-sidebar .phaser-primary-button,
+.phaser-hud-sidebar .phaser-secondary-button,
+.phaser-hud-sidebar .phaser-chip-button,
+.phaser-hud-sidebar .phaser-ghost-button {
+  padding: 8px 12px;
+  font-size: 12px;
+}
+
+.phaser-hud-sidebar .phaser-inline-actions,
+.phaser-hud-sidebar .phaser-button-stack,
+.phaser-hud-sidebar .phaser-meta-stack {
+  gap: 8px;
+}
+
+.phaser-hud-sidebar .phaser-info-box,
+.phaser-hud-sidebar .phaser-error {
+  padding: 10px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.phaser-hud-sidebar .phaser-player-compact {
+  gap: 8px;
+}
+
+.phaser-hud-sidebar .phaser-player-compact-header {
+  gap: 3px;
+}
+
+.phaser-hud-sidebar .phaser-player-compact-title {
+  font-size: 13px;
+}
+
+.phaser-hud-sidebar .phaser-player-compact-subtitle {
+  font-size: 11px;
+}
+
+.phaser-hud-sidebar .phaser-player-compact-grid {
+  gap: 6px;
+}
+
+.phaser-hud-sidebar .phaser-player-compact-card {
+  padding: 8px 9px;
+  gap: 3px;
+  border-radius: 12px;
+}
+
+.phaser-hud-sidebar .phaser-player-compact-label {
+  font-size: 10px;
+}
+
+.phaser-hud-sidebar .phaser-player-compact-value {
+  font-size: 12px;
+  line-height: 1.25;
+}
+
+.phaser-hud-sidebar .phaser-player-compact-meta {
+  font-size: 10px;
+  line-height: 1.3;
+}
+
+.phaser-hud-sidebar .phaser-list-item {
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 16px;
+}
+
+.phaser-hud-sidebar .phaser-list-title {
+  font-size: 13px;
+}
+
+.phaser-hud-sidebar .phaser-list-meta {
+  margin-top: 3px;
+  font-size: 11px;
+}
+
+.phaser-remote-dice-item {
+  display: grid;
+  gap: 8px;
+}
+
+.phaser-remote-dice-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 6px;
+  width: 100%;
+}
+
+.phaser-remote-dice-grid .phaser-chip-button {
+  width: 100%;
+  min-width: 0;
+  padding: 7px 0;
+}
+
+.phaser-player-summary-head {
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.phaser-player-summary-head .phaser-ghost-button {
+  white-space: nowrap;
+}
+
+.phaser-hud-modal-launch-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.phaser-hud-modal-launch-grid .phaser-chip-button {
+  width: 100%;
+  min-height: 38px;
+}
+
+.phaser-bank-note {
+  display: grid;
+  gap: 4px;
+}
+
+.phaser-bank-note-title {
+  font-size: 12px;
+  font-weight: 800;
+  color: #fef3c7;
+}
+
+.phaser-bank-note-meta {
+  font-size: 11px;
+  line-height: 1.35;
+  color: rgba(254, 243, 199, 0.92);
+}
+
+.phaser-bank-action-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.phaser-bank-action-grid .phaser-chip-button {
+  width: 100%;
+  justify-content: center;
+}
+
+.phaser-bank-exit-button {
+  width: 100%;
+}
+
+.phaser-hud-section-nav {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.phaser-hud-section-nav .phaser-chip-button {
+  width: 100%;
+  min-height: 36px;
+}
+
+.phaser-lottery-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.phaser-lottery-ticket {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.phaser-ticket-color-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  flex: none;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.18);
+}
+
+.phaser-ticket-color-dot.is-red {
+  background: #ef4444;
+}
+
+.phaser-ticket-color-dot.is-orange {
+  background: #f97316;
+}
+
+.phaser-ticket-color-dot.is-yellow {
+  background: #eab308;
+}
+
+.phaser-ticket-color-dot.is-green {
+  background: #22c55e;
+}
+
+.phaser-ticket-color-dot.is-blue {
+  background: #3b82f6;
+}
+
+.phaser-ticket-color-dot.is-violet {
+  background: #8b5cf6;
+}
+
+.phaser-ticket-color-dot.is-slate {
+  background: #94a3b8;
+}
+
+.phaser-hud-modal-shell {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+}
+
+.phaser-hud-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  border: none;
+  padding: 0;
+  background: rgba(2, 6, 23, 0.52);
+  cursor: pointer;
+}
+
+.phaser-hud-modal-card {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: min(760px, calc(100vw - 28px));
+  max-height: min(78vh, 720px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.phaser-hud-modal-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+}
+
+.phaser-hud-modal-body {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  gap: 10px;
+  overflow: auto;
+  padding-right: 4px;
+}
+
+.phaser-hud-modal-body .phaser-scroll-region {
+  max-height: none;
+}
+
+.phaser-item-action-card {
+  width: min(560px, calc(100vw - 28px));
+}
+
+.phaser-news-event-shell {
+  z-index: 36;
+}
+
+.phaser-news-event-card {
+  width: min(560px, calc(100vw - 28px));
+}
+
+.phaser-navigate-home-shell {
+  z-index: 37;
+}
+
+.phaser-navigate-home-card {
+  width: min(560px, calc(100vw - 28px));
+}
+
+.phaser-bankruptcy-confirm-shell {
+  z-index: 38;
+}
+
+.phaser-bankruptcy-confirm-card {
+  width: min(520px, calc(100vw - 28px));
+}
+
+.phaser-item-action-target-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.phaser-item-action-target-grid .phaser-chip-button {
+  width: 100%;
+  justify-content: center;
+}
+
+.phaser-bot-assets-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.phaser-bot-asset-card {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(148, 163, 184, 0.16);
+}
+
+.phaser-bot-asset-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.phaser-bot-asset-name {
+  font-size: 15px;
+  font-weight: 800;
+  color: #f8fafc;
+}
+
+.phaser-bot-asset-meta,
+.phaser-bot-asset-footer {
+  font-size: 12px;
+  line-height: 1.5;
+  color: rgba(226, 232, 240, 0.72);
+}
+
+.phaser-bot-asset-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.phaser-bot-asset-stat {
+  display: grid;
+  gap: 4px;
+  padding: 10px;
+  border-radius: 14px;
+  background: rgba(15, 23, 42, 0.52);
+  border: 1px solid rgba(148, 163, 184, 0.12);
+}
+
+.phaser-bot-asset-stat span {
+  font-size: 11px;
+  font-weight: 800;
+  color: rgba(226, 232, 240, 0.66);
+}
+
+.phaser-bot-asset-stat strong {
+  font-size: 13px;
+  color: #f8fafc;
+  line-height: 1.35;
+}
+
+.phaser-bot-asset-expand-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.phaser-bot-property-list {
+  display: grid;
+  gap: 8px;
+}
+
+.phaser-bot-property-item {
+  display: grid;
+  gap: 4px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: rgba(15, 23, 42, 0.52);
+  border: 1px solid rgba(148, 163, 184, 0.12);
+}
+
+.phaser-bot-property-title {
+  font-size: 13px;
+  font-weight: 800;
+  color: #f8fafc;
+}
+
+.phaser-bot-property-meta {
+  font-size: 12px;
+  line-height: 1.5;
+  color: rgba(226, 232, 240, 0.72);
+}
+
+.phaser-hud-danger-corner {
+  justify-self: end;
+  margin-top: 2px;
+  opacity: 0.64;
+}
+
+.phaser-quiet-danger-button {
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px dashed rgba(248, 113, 113, 0.28);
+  background: rgba(127, 29, 29, 0.22);
+  color: rgba(254, 202, 202, 0.78);
+  font-size: 11px;
+  font-weight: 700;
+  transition: opacity 140ms ease, background 140ms ease, border-color 140ms ease;
+}
+
+.phaser-quiet-danger-button:hover {
+  opacity: 1;
+  background: rgba(127, 29, 29, 0.34);
+  border-color: rgba(248, 113, 113, 0.44);
+}
+
+.phaser-quiet-danger-button:disabled {
+  opacity: 0.4;
+}
+
+@media (max-width: 1280px) {
+  .phaser-ui-screen {
+    width: min(880px, max(380px, calc(100vw - 500px)));
+  }
+
+  .phaser-hud-topbar {
+    width: min(420px, calc(100vw - 332px));
+  }
+
+  .phaser-hud-sidebar {
+    width: min(296px, 24vw);
+  }
+}
+
+@media (max-width: 1100px) {
+  .phaser-home-grid,
+  .phaser-lobby-grid,
+  .phaser-settings-grid,
+  .phaser-character-grid,
+  .phaser-home-rules-grid,
+  .phaser-home-form-grid,
+  .phaser-lobby-form-grid,
+  .phaser-room-list-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .phaser-field--span-2 {
+    grid-column: span 1;
+  }
+
+  .phaser-ui-screen {
+    width: min(92vw, 640px);
+    gap: 14px;
+  }
+
+  .phaser-screen-title {
+    font-size: 28px;
+  }
+
+  .phaser-top-actions {
+    align-items: flex-start;
+  }
+
+  .phaser-home-header-row {
+    align-items: center;
+  }
+
+  .phaser-hud-topbar {
+    left: 14px;
+    top: 14px;
+    width: calc(100vw - 28px);
+    padding: 10px 12px;
+    grid-template-columns: 1fr auto;
+  }
+
+  .phaser-hud-sidebar {
+    left: 14px;
+    right: 14px;
+    top: auto;
+    bottom: 14px;
+    width: auto;
+    max-height: min(210px, 29vh);
+    padding-right: 0;
+    gap: 8px;
+  }
+
+  .phaser-hud-sidebar .phaser-panel {
+    padding: 12px;
+    border-radius: 20px;
+  }
+
+  .phaser-hud-sidebar .phaser-panel-title {
+    font-size: 16px;
+  }
+
+  .phaser-hud-sidebar .phaser-scroll-region {
+    max-height: none;
+  }
+
+  .phaser-lobby-root .phaser-character-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .phaser-lobby-root .phaser-list-item,
+  .phaser-hud-sidebar .phaser-list-item {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .phaser-bank-action-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .phaser-remote-dice-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .phaser-hud-modal-launch-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .phaser-item-action-target-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .phaser-pill {
+    justify-self: start;
+  }
+
+  .phaser-hud-modal-card {
+    width: min(760px, calc(100vw - 18px));
+    max-height: min(76vh, 680px);
+    border-radius: 22px;
+  }
+
+  .phaser-bot-assets-grid,
+  .phaser-bot-asset-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .phaser-lottery-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 860px) {
+  .phaser-hud-topbar {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .phaser-hud-topbar .phaser-ghost-button {
+    justify-self: start;
+    padding: 8px 11px;
+  }
+
+  .phaser-hud-title {
+    font-size: 17px;
+  }
+
+  .phaser-hud-meta {
+    font-size: 12px;
+  }
+
+  .phaser-hud-section-nav {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .phaser-player-compact-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .phaser-remote-dice-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .phaser-hud-modal-header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .phaser-hud-modal-header .phaser-ghost-button {
+    align-self: flex-start;
+  }
+}

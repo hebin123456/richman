@@ -1,0 +1,31 @@
+# Web
+node_modules/
+.next/
+out/
+web/
+
+# 安卓原生构建产物
+android/app/build/
+android/app/libnode/
+android/build/
+android/.gradle/
+android/local.properties
+android/capacitor-cordova-android-plugins/build/
+
+# 内嵌服务 assets(由 prepare-server.sh 生成)
+android/app/src/main/assets/nodejs-project/
+android/app/src/main/assets/dev.db
+android/app/src/main/assets/capacitor.config.json
+android/app/src/main/assets/capacitor.plugins.json
+android/app/src/main/assets/public/
+
+# 交叉编译中间产物
+.sqlite3-android/
+
+# 构建产物 APK / 运行时环境
+dist/
+*.env
+.env
+*.db
+*.db-journal
+.DS_Store*.tsbuildinfo

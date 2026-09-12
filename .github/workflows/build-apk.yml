@@ -1,0 +1,131 @@
+name: Build Android APK
+
+# 触发器:
+#   - 推送到 main / release 分支
+#   - 打 tag v* (如 v1.0.0) 时额外创建 GitHub Release 并附带 APK
+#   - 手动触发:仓库 Actions 页点 "Run workflow"
+on:
+  push:
+    branches: [main, release]
+    tags: ["v*"]
+    paths:
+      - "**.ts"
+      - "**.tsx"
+      - "package.json"
+      - "next.config.ts"
+      - "capacitor.config.ts"
+      - "prisma/**"
+      - "public/**"
+      - "src/**"
+      - "scripts/**"
+      - "android/app/**"
+      - ".github/workflows/**"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: apk-build-${{ github.ref }}
+      cancel-in-progress: true
+
+    env:
+      # Prisma 生成客户端需要
+      DATABASE_URL: "file:./dev.db"
+      # 内嵌服务对应 nodejs-mobile 版本目标(自定义交叉编译时使用)
+      NAPI_NODE_VERSION: "18.20.4"
+      # 目标 ABI(真机主力)
+      ABI: "arm64-v8a"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Setup JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Setup Android SDK & NDK
+        uses: android-actions/setup-android@v3
+        with:
+          cmdline-tools-version: latest
+          cmake-version: 3.22.1
+        # setup-android 会安装 platform-tools;下面再补 platform/build-tools/NDK
+      - name: Install platform, build-tools, NDK
+        run: |
+          yes | sdkmanager --licenses >/dev/null 2>&1 || true
+          sdkmanager "platforms;android-36" "build-tools;36.0.0" "ndk;26.1.10909125" system-images;android-36;default;x86_64 >/dev/null 2>&1 || true
+          echo "ANDROID_HOME=$ANDROID_HOME"
+          ls "$ANDROID_HOME/ndk" || true
+
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('android/**/*.gradle*') }}
+          restore-keys: gradle-${{ runner.os }}
+
+      - name: Install Node deps
+        run: npm ci --no-audit --no-fund
+
+      # ---- 准备内嵌服务(Next standalone -> Android assets) ----
+      - name: Prepare embedded server
+        run: bash scripts/prepare-server.sh
+
+      # ---- 下载 nodejs-mobile 预编译核心(libnode.so) ----
+      - name: Fetch nodejs-mobile libnode
+        run: |
+          bash scripts/fetch-libnode.sh \
+            https://github.com/nodejs-mobile/nodejs-mobile/releases/download/v18.20.4/nodejs-mobile-v18.20.4-android.zip
+
+      # ---- 交叉编译 better-sqlite3 到 Arm64,供安卓端加载 ----
+      - name: Cross-compile better-sqlite3 (arm64)
+        if: always()
+        continue-on-error: true   # 该项失败不阻断打包,但会在产物说明中标明需要人工校验
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq cmake ninja-build
+          npm i -g bare-make@latest
+          export ANDROID_NDK_HOME="$ANDROID_HOME/ndk/26.1.10909125"
+          NAPI_NODE_VERSION="$NAPI_NODE_VERSION" ABI="$ABI" \
+            bash scripts/cross-compile-better-sqlite3.sh
+
+      - name: Build APK
+        run: |
+          cd android
+          ./gradlew assembleDebug --console=plain
+
+      - name: Verify APK contents
+        run: |
+          APK=$(find android/app/build/outputs/apk/debug -name '*.apk' | head -1)
+          echo "APK=$APK"
+          unzip -l "$APK" | grep -E "lib/arm64-v8a/lib(node|native-lib).so" || echo "WARN: 缺少原生库"
+          unzip -l "$APK" | grep -E "assets/nodejs-project/server.js" || echo "WARN: 未找到内嵌服务"
+          unzip -l "$APK" | grep -E "better_sqlite3.node" || echo "WARN: 未找到 better_sqlite3.node"
+
+      # ---- 上传 APK 作为构建产物 ----
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: richman-debug-apk
+          path: android/app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+
+      # ---- 打 tag 时发布 Release ----
+      - name: Create GitHub Release (tag only)
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: 掌上大富翁 ${{ github.ref_name }}
+          files: android/app/build/outputs/apk/debug/*.apk
+          generate_release_notes: true
