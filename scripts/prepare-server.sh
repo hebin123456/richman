@@ -11,7 +11,9 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 
 export DATABASE_URL="${DATABASE_URL:-file:./dev.db}"
-export NODE_ENV=production
+# 注意:构建期必须保留 devDependencies(如 @tailwindcss/postcss),
+# 因此不要在构建阶段 export NODE_ENV=production(那会让 npm 跳过 devDeps)。
+# 生产运行时环境由安卓侧的 bootstrap.js 注入。
 
 echo "[1/4] 安装依赖 & 生成 Prisma Client"
 npm install --no-audit --no-fund
