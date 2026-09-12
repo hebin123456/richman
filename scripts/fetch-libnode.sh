@@ -61,17 +61,33 @@ TMP="$(mktemp -d)"
 curl -fL "$URL" -o "$TMP/nodejs.zip"
 unzip -q -o "$TMP/nodejs.zip" -d "$TMP/x"
 
-# 尝试从解压目录中定位 bin/include(可能有嵌套目录)
-SRC="$TMP/x"
-find "$TMP/x" -type d -name bin 2>/dev/null | head -1 | read -r BINDIR || true
-if [ -n "${BINDIR:-}" ]; then
-  cp -r "$(dirname "$BINDIR")/include" "$DEST/include"
+# 兜底环境:有些压缩包体为 nodejs-mobile 提供的"极限/嵌入式"结构、
+# 结构层级可能不同(v18 官方包为顶层 bin/include,digidem v24 包则通常嵌在
+# libnode/ 等一层子目录)。以下用 find 健壮地定位 bin 与 include,消除子 shell 陷阱。
+BINDIR="$(find "$TMP/x" -type d -name bin 2>/dev/null | while IFS= read -r d; do
+  [ -f "$d/arm64-v8a/libnode.so" ] && echo "$d" && break
+done | head -1)"
+INCDIR="$(find "$TMP/x" -type f -name node.h -path '*/node/node.h' 2>/dev/null | head -1 | xargs -r dirname | xargs -r dirname | head -1)"
+
+if [ -n "$BINDIR" ]; then
+  echo ">> 定位到 bin 目录: $BINDIR"
   for abi in $ABIS; do
-    [ -d "$BINDIR/$abi" ] && { mkdir -p "$DEST/bin/$abi"; cp "$BINDIR/$abi/libnode.so" "$DEST/bin/$abi/" 2>/dev/null || true; }
+    if [ -f "$BINDIR/$abi/libnode.so" ]; then
+      mkdir -p "$DEST/bin/$abi"
+      cp "$BINDIR/$abi/libnode.so" "$DEST/bin/$abi/"
+    fi
   done
+  if [ -n "$INCDIR" ]; then
+    mkdir -p "$DEST/include"
+    cp -r "$INCDIR/node" "$DEST/include/node"
+  fi
+elif [ -d "$TMP/x/bin" ] && [ -d "$TMP/x/include" ]; then
+  echo ">> 使用顶层 bin/include 结构"
+  cp -r "$TMP/x/bin" "$DEST/bin"
+  cp -r "$TMP/x/include" "$DEST/include"
 else
-  cp -r "$SRC/bin" "$DEST/bin"  2>/dev/null || true
-  cp -r "$SRC/include" "$DEST/include" 2>/dev/null || true
+  echo "!! 无法识别压缩包结构,请检查下载地址是否匹配 nodejs-mobile" >&2
+  exit 1
 fi
 
 rm -rf "$TMP"

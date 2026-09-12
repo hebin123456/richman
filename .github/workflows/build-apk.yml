@@ -32,8 +32,9 @@ jobs:
     env:
       # Prisma 生成客户端需要
       DATABASE_URL: "file:./dev.db"
-      # 内嵌服务对应 nodejs-mobile 版本目标(自定义交叉编译时使用)
-      NAPI_NODE_VERSION: "18.20.4"
+      # 内嵌服务对应 nodejs-mobile 版本(digidem v24 行,NAPI 10)。
+      # better-sqlite3 >= 13 要求 N-API 10,nodejs-mobile 18 只到 N-API 9,故必须用 24。
+      NAPI_NODE_VERSION: "24.19.0-0"
       # 目标 ABI(真机主力)
       ABI: "arm64-v8a"
 
@@ -83,20 +84,17 @@ jobs:
       - name: Prepare embedded server
         run: bash scripts/prepare-server.sh
 
-      # ---- 下载 nodejs-mobile 预编译核心(libnode.so) ----
+      # ---- 下载 nodejs-mobile 预编译核心(libnode.so),digidem v24 行 ----
       - name: Fetch nodejs-mobile libnode
         run: |
           bash scripts/fetch-libnode.sh \
-            https://github.com/nodejs-mobile/nodejs-mobile/releases/download/v18.20.4/nodejs-mobile-v18.20.4-android.zip
+            https://github.com/digidem/nodejs-mobile/releases/download/v${NAPI_NODE_VERSION}/nodejs-mobile-android-${NAPI_NODE_VERSION}.zip
 
-      # ---- 交叉编译 better-sqlite3 到 Arm64,供安卓端加载 ----
-      # 前置准备(含 prepare-server)成功后才会执行;该步内已带架构硬校验,
-      # 一旦交叉编译失败即在此时中止,避免继续生成必然卡死的 APK。
-      - name: Cross-compile better-sqlite3 (arm64)
+      # ---- 下载 better-sqlite3 的 arm64 预编译产物并替换进内嵌服务 ----
+      # 已改由 digidem 预编译包提供(nodejs-mobile v24,NAPI 10),不再现场编译。
+      # 脚本内置 aarch64 硬校验,失败即中止,避免生成必然卡死的 APK。
+      - name: Fetch better-sqlite3 arm64 prebuilt
         run: |
-          sudo apt-get update -qq && sudo apt-get install -y -qq cmake ninja-build
-          npm i -g bare-make@latest
-          export ANDROID_NDK_HOME="$ANDROID_HOME/ndk/26.1.10909125"
           NAPI_NODE_VERSION="$NAPI_NODE_VERSION" ABI="$ABI" \
             bash scripts/cross-compile-better-sqlite3.sh
 
