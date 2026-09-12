@@ -53,11 +53,23 @@ if [ -z "${OUT_NODE:-}" ]; then
   echo "!! 未找到 Android 的 better_sqlite3.node 产物" >&2; exit 1
 fi
 
-echo "[5/5] 替换内嵌服务中的 .node"
-# better-sqlite3 通过 bindings 查找 build/Release/better_sqlite3.node
-INSTALL_DIR="$NODE_MODS/build/Release"
-mkdir -p "$INSTALL_DIR"
-cp "$OUT_NODE" "$INSTALL_DIR/better_sqlite3.node"
+echo "[5/5] 替换内嵌服务中所有更好-sqlite3 的 .node 副本"
+# 关键:Next standalone 的 outputFileTracing 会把 better-sqlite3 按需复制到
+# @prisma/adapter-better-sqlite3/node_modules/better-sqlite3 这一"嵌套副本",
+# 运行期适配器就近 require 会优先命中该副本。因此必须把 assets 下所有
+# build/Release/better_sqlite3.node 全部替换为 arm64 产物,只改顶层目录不够。
+ASSET_ROOT="$(dirname "$NODE_MODS")"   # .../assets/nodejs-project/node_modules
+REPLACED=0
+while IFS= read -r target; do
+  mkdir -p "$(dirname "$target")"
+  cp "$OUT_NODE" "$target"
+  echo "  已替换: $target"
+  REPLACED=$((REPLACED+1))
+done < <(find "$ASSET_ROOT" -path "*/better-sqlite3/build/Release/better_sqlite3.node" -print)
 
-echo "完成: $INSTALL_DIR/better_sqlite3.node"
+if [ "$REPLACED" -eq 0 ]; then
+  echo "!! 未找到任何 better_sqlite3.node,请检查内嵌服务是否已用 prepare-server.sh 生成" >&2
+  exit 1
+fi
+echo "完成:共替换 $REPLACED 处 better_sqlite3.node(arm64)"
 echo "提示:如需支持 armeabi-v7a / x86_64 模拟器,请分别设置 ABI 重复本脚本并替换对应构架。"

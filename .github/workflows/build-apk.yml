@@ -117,7 +117,21 @@ jobs:
           echo "APK=$APK"
           unzip -l "$APK" | grep -E "lib/arm64-v8a/lib(node|native-lib).so" || echo "WARN: 缺少原生库"
           unzip -l "$APK" | grep -E "assets/nodejs-project/server.js" || echo "WARN: 未找到内嵌服务"
-          unzip -l "$APK" | grep -E "better_sqlite3.node" || echo "WARN: 未找到 better_sqlite3.node"
+          # 架构硬校验:设备 arm64 上若混入 x86 的 better_sqlite3.node 会启动卡死,
+          # 这里抽取 APK 中的副本并用 file 确认是 aarch64,防回归。
+          echo "---- 校验 better_sqlite3.node 架构 ----"
+          rm -rf /tmp/archcheck && mkdir -p /tmp/archcheck
+          unzip -o -q "$APK" "assets/nodejs-project/node_modules/@prisma/adapter-better-sqlite3/node_modules/better-sqlite3/build/Release/*" -d /tmp/archcheck || true
+          unzip -o -q "$APK" "assets/nodejs-project/node_modules/better-sqlite3/build/Release/*" -d /tmp/archcheck || true
+          FOUND=0
+          while IFS= read -r b; do
+            FOUND=1
+            echo "== $b =="
+            file "$b"
+            file "$b" | grep -qiE "aarch64|ARM aarch64" || { echo "!! 发现非 arm64 的 better_sqlite3.node,设备端会启动卡死"; exit 1; }
+          done < <(find /tmp/archcheck -name "better_sqlite3.node" -print)
+          [ "$FOUND" -eq 1 ] || { echo "!! 未在 APK 中找到 better_sqlite3.node"; exit 1; }
+          echo "OK: 所有 better_sqlite3.node 均为 arm64"
 
       # ---- 上传 APK 作为构建产物 ----
       - name: Upload APK artifact
