@@ -90,10 +90,9 @@ jobs:
             https://github.com/nodejs-mobile/nodejs-mobile/releases/download/v18.20.4/nodejs-mobile-v18.20.4-android.zip
 
       # ---- 交叉编译 better-sqlite3 到 Arm64,供安卓端加载 ----
-      # 提示:前置准备(含 prepare-server)成功后才会执行;
-      # 该步骤失败不阻断打包,但产物中的 sqlite 则需按 README 手动交叉编译。
+      # 前置准备(含 prepare-server)成功后才会执行;该步内已带架构硬校验,
+      # 一旦交叉编译失败即在此时中止,避免继续生成必然卡死的 APK。
       - name: Cross-compile better-sqlite3 (arm64)
-        continue-on-error: true
         run: |
           sudo apt-get update -qq && sudo apt-get install -y -qq cmake ninja-build
           npm i -g bare-make@latest
